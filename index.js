@@ -33,7 +33,7 @@ fileLines.forEach(line => {
                 if(!string) {
                     if(character) {
                         character = false;
-                        let charName = line.split(' ').filter(exp => exp.length > 0)[0] || "aaa"
+                        let charName = line.split(' ').filter(exp => exp.length > 0)[0]
                         characterText.push([charName, strings.join('')]);
                     } else if(narratorCharacter) {
                         narratorCharacter = false;

@@ -1,6 +1,4 @@
-const { log } = require('console');
 const fs = require('fs');
-const { isObject } = require('util');
 
 const fileName = process.argv[2];
 
@@ -8,16 +6,6 @@ let file = fs.readFileSync(fileName, {encoding: 'utf8'});
 const DefaultCharNames = ['MC', 'Sayori', 'Monika', 'Natsuki', 'Yuri', 'Natsuki & Yuri']
 const Characters = ['mc', 's', 'm', 'n', 'y', 'ny']
 let CharNames = [null, null, null, null, null, 'Natsuki & Yuri']
-const isACharacterInstruction = (token, i, fileTokens) => {
-    /*let tokensTillSpace = readTokensTillSpace(i, fileTokens).join('');
-    let charIndex = Characters.indexOf(tokensTillSpace);
-    if(charIndex !== -1) {
-        return { charIndex, tokensTillSpace }
-    }
-    return { charIndex: null, tokensTillSpace };*/
-    
-}
-
 
 let string = false;
 let character = false;
@@ -27,17 +15,7 @@ let stringArray = [];
 let characterText = [];
 let otherTokens = [];
 let fileLines = file.split('\n');
-const readTokensTillSpace = (index=0, fileTokens) => {
-    let result = [];
-    for(let tokenI in fileTokens) {
-        if(tokenI >= index) {
-            let token = fileTokens[tokenI]
-            if(token == " ") break;
-            result.push(token);
-        }
-    }
-    return result;
-}
+
 
 // regex to test if a token is starting a new expression or part of one
 const expressionRegex = /[\t\n ]/g;
@@ -90,12 +68,7 @@ fileLines.forEach(line => {
         }
     })
     character = false;
-    /*let { charIndex, tokensTillSpace } = isACharacterInstruction(token, i, fileTokens);
-    if(charIndex !== null) {
-        console.log(`show char instruction  ${DefaultCharNames[charIndex]}, ${tokensTillSpace}, ${stringArray[stringArray.length-1]}`)
-    }*/
+
 })
 
 console.log(characterText.map(text => `${DefaultCharNames[Characters.indexOf(text[0])] || text[0]} - ${text[1]}`).join('\n'))
-//console.log(otherTokens.join(''))
-//console.log(stringArray)

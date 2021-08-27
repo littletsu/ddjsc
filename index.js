@@ -11,9 +11,18 @@ let string = false;
 let character = false;
 let narratorCharacter = false;
 let strings = [];
-let stringArray = [];
-let characterText = [];
-let otherTokens = [];
+
+let instructions = [];
+const INSTRUCTIONS = {
+    CHARACTER_TEXT: "characterText",
+    STRING: "string",
+    OTHER: "other"
+}
+const pushInstruction = (type, data) => instructions.push({
+    type,
+    data
+})
+
 let fileLines = file.split('\n');
 
 
@@ -34,12 +43,12 @@ fileLines.forEach(line => {
                     if(character) {
                         character = false;
                         let charName = line.split(' ').filter(exp => exp.length > 0)[0]
-                        characterText.push([charName, strings.join('')]);
+                        pushInstruction(INSTRUCTIONS.CHARACTER_TEXT, [charName, strings.join('')])
                     } else if(narratorCharacter) {
                         narratorCharacter = false;
-                        characterText.push(["Narrator", strings.join('')])
+                        pushInstruction(INSTRUCTIONS.CHARACTER_TEXT, ["Narrator", strings.join('')])
                     } else {
-                        stringArray.push(strings.join(''));
+                        pushInstruction(INSTRUCTIONS.STRING, strings.join(''));
                     }
                     strings = [];
                 }
@@ -56,11 +65,12 @@ fileLines.forEach(line => {
                 if((lastToken.match(expressionRegex))) {
                     if((((Characters.indexOf(token) !== -1) && (nextToken == " ")) || ((token === "m") && (nextToken === "c")) || ((token === "n") && (nextToken === "y")))) {
                         character = true;
-                        return;
+                        break;
                     }
 
                     if(nextToken == '"' && !narratorCharacter) {
                         narratorCharacter = true;
+                        break;
                     }
                     
                 }
@@ -71,4 +81,5 @@ fileLines.forEach(line => {
 
 })
 
-console.log(characterText.map(text => `${DefaultCharNames[Characters.indexOf(text[0])] || text[0]} - ${text[1]}`).join('\n'))
+//console.log(characterText.map(text => `${DefaultCharNames[Characters.indexOf(text[0])] || text[0]} - ${text[1]}`).join('\n'))
+console.log(instructions.filter(instr => instr.type === INSTRUCTIONS.CHARACTER_TEXT).map(instr => `${DefaultCharNames[Characters.indexOf(instr.data[0])] || instr.data[0]} - ${instr.data[1]}`).join('\n'))
